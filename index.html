@@ -35,8 +35,9 @@
 
     <!-- Navbar -->
     <div class="bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center shadow-sm sticky top-0 z-40">
-        <div class="flex items-center gap-2">
-            <!-- Logo Removida -->
+        <div class="flex items-center gap-3">
+            <!-- Ícone PWA Adicionado na Navbar -->
+            <img src="https://i.imgur.com/wEozr34.png" alt="Logo SPG" class="w-8 h-8 rounded-lg shadow-sm border border-slate-100">
             <div>
                 <h1 class="text-sm font-bold text-slate-800 leading-tight">SPG Oásis</h1>
                 <p class="text-[10px] text-slate-500 font-medium">Resumo de Colheita SPG Oásis</p>
@@ -120,24 +121,44 @@
                 
                 <form id="harvestForm" onsubmit="addItem(event)" class="space-y-4">
                     
-                    <!-- CAMPO BLOCO -->
+                    <!-- CAMPO BLOCO (AGORA UM SELECT) -->
                     <div>
                         <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Nº Bloco</label>
-                        <input type="text" id="talhao" placeholder="Ex: 1 - B" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
+                        <select id="talhao" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white">
+                            <option value="">Selecione...</option>
+                            <option value="1 - A">1 - A</option>
+                            <option value="2 - A">2 - A</option>
+                            <option value="3 - A">3 - A</option>
+                            <option value="4 - A">4 - A</option>
+                            <option value="5 - A">5 - A</option>
+                            <option value="6 - A">6 - A</option>
+                            <option value="7 - A">7 - A</option>
+                            <option value="8 - A">8 - A</option>
+                            <option value="9 - A">9 - A</option>
+                            <option value="10 - A">10 - A</option>
+                            <option value="11 - A">11 - A</option>
+                            <option value="1 - B">1 - B</option>
+                            <option value="2 - B">2 - B</option>
+                            <option value="3 - B">3 - B</option>
+                            <option value="4 - B">4 - B</option>
+                            <option value="5 - B">5 - B</option>
+                        </select>
                     </div>
 
                     <!-- LINHA DE VARIEDADE E COMERCIAL -->
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Cultura</label>
-                            <select id="variety" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white">
+                            <!-- AJUSTE: Adicionado onchange para atualizar variedades -->
+                            <select id="variety" onchange="updateCommercialInput()" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white">
                                 <option value="">Selecione...</option>
                                 <option value="Brócolis">Brócolis</option>
                                 <option value="Couve-Flor">Couve-Flor</option>
                             </select>
                         </div>
-                        <div>
+                        <div id="commercialVarietyWrapper">
                             <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Var. Comercial</label>
+                            <!-- O conteúdo deste input será alterado via JS dependendo da cultura -->
                             <input type="text" id="commercialVariety" placeholder="Ex: Avenger" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
                         </div>
                     </div>
@@ -219,21 +240,27 @@
                 
                 <!-- Cabeçalho (AJUSTADO PARA MOBILE) -->
                 <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 p-6 text-white relative overflow-hidden flex flex-col justify-start shrink-0 gap-3">
-                    <div class="relative z-10 w-full">
+                    
+                    <!-- LOGO ADICIONADA: ABSOLUTE TOP RIGHT -->
+                    <!-- AJUSTE: Tamanho DIMINUÍDO (w-20 h-20) e bordas removidas -->
+                    <img src="https://i.imgur.com/wEozr34.png" alt="Logo SPG" class="absolute top-4 right-4 w-20 h-20 z-0">
+
+                    <!-- AJUSTE: Padding DIMINUÍDO (pr-24) para acompanhar a logo menor -->
+                    <div class="relative z-10 w-full pr-24"> 
                         <!-- TÍTULO DINÂMICO DE 2 LINHAS -->
-                        <h2 id="reportTitle" class="text-2xl font-bold leading-snug">
+                        <!-- AJUSTE: Tamanho do texto reduzido de text-lg para text-base, adicionado tracking-normal -->
+                        <h2 id="reportTitle" class="text-base font-bold leading-snug tracking-normal">
                             <!-- Injetado via JS -->
                         </h2>
                         
                         <!-- LINHA DE DATA DESTAQUE (Line 3) -->
                         <div class="mt-3 pt-3 border-t border-white/20">
-                             <span id="headerDateTime" class="text-sm font-medium text-emerald-50 block opacity-90 tracking-wide">
+                             <!-- AJUSTE: Tamanho do texto reduzido de text-sm para text-xs -->
+                             <span id="headerDateTime" class="text-xs font-medium text-emerald-50 block opacity-90 tracking-wide">
                                 <!-- Injetado via JS -->
                             </span>
                         </div>
                     </div>
-
-                    <!-- LOGO REMOVIDA AQUI -->
                 </div>
 
                 <!-- Conteúdo (FLEX-1 para empurrar rodapé) -->
@@ -249,7 +276,7 @@
                 <!-- Rodapé da Marca, shrink-0 -->
                 <div class="bg-slate-100 p-3 text-center border-t border-slate-200 shrink-0">
                     <div class="flex justify-center items-center gap-2 text-[10px] text-slate-400 font-medium uppercase tracking-widest leading-relaxed">
-                        <!-- Logo Removida -->
+                        <!-- Logo (agora apenas texto para manter limpo, já que está no header) -->
                         SPG Oásis • Dados Oficiais
                     </div>
                 </div>
@@ -304,6 +331,7 @@
             
             // Linhas 1 e 2: Saudação e "Resumo da Colheita de [Dia]"
             const titleElement = document.getElementById('reportTitle');
+            // GARANTE ESPAÇOS:
             titleElement.innerHTML = `${greeting}<br>Resumo da Colheita de ${dayOfWeek}`;
 
             // Linha 3: Data Completa
@@ -375,16 +403,60 @@
 
         // --- FUNÇÕES DE OPERAÇÃO DA LISTA E FORMULÁRIO ---
 
+        // AJUSTE: Função para atualizar campo Var. Comercial Dinamicamente
+        function updateCommercialInput() {
+            const variety = document.getElementById('variety').value;
+            const wrapper = document.getElementById('commercialVarietyWrapper');
+            
+            if (variety === 'Brócolis') {
+                // Se for Brócolis, muda para Select com opções específicas
+                wrapper.innerHTML = `
+                    <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Var. Comercial</label>
+                    <select id="commercialVariety" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white">
+                        <option value="">Selecione...</option>
+                        <option value="BRO 68 Syngenta">BRO 68 Syngenta</option>
+                        <option value="Master TSV">Master TSV</option>
+                        <option value="Sakata Jiraya F1">Sakata Jiraya F1</option>
+                        <option value="PHAR LAP">PHAR LAP</option>
+                    </select>
+                `;
+            } else if (variety === 'Couve-Flor') {
+                // Se for Couve-Flor, muda para Select com opções específicas
+                wrapper.innerHTML = `
+                    <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Var. Comercial</label>
+                    <select id="commercialVariety" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white">
+                        <option value="">Selecione...</option>
+                        <option value="Vereda">Vereda</option>
+                        <option value="Copacabana">Copacabana</option>
+                        <option value="Tirsuli">Tirsuli</option>
+                        <option value="SF-1758 F1">SF-1758 F1</option>
+                        <option value="Champagne Snow">Champagne Snow</option>
+                        <option value="Serena">Serena</option>
+                        <option value="Supremo">Supremo</option>
+                    </select>
+                `;
+            } else {
+                // Se for outro, volta para Input Texto
+                wrapper.innerHTML = `
+                    <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Var. Comercial</label>
+                    <input type="text" id="commercialVariety" placeholder="Ex: Avenger" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-sm">
+                `;
+            }
+        }
+
         function clearBlockForm() {
             document.getElementById('talhao').value = '';
-            document.getElementById('commercialVariety').value = '';
             document.getElementById('startDate').value = '';
             document.getElementById('date').value = '';
             document.getElementById('plants').value = '';
             document.getElementById('totalUnits').value = '';
             document.getElementById('boxes').value = '';
             document.getElementById('dailyUnits').value = '';
-            document.getElementById('variety').selectedIndex = 0; 
+            
+            // Reseta Cultura e Atualiza Var. Comercial
+            const varietySelect = document.getElementById('variety');
+            varietySelect.selectedIndex = 0;
+            updateCommercialInput(); // Reseta para input texto
         }
 
         function addItem(e) {
@@ -679,11 +751,11 @@
 
                         // Melhoria de Tipografia para maior nitidez
                         const style = clonedDoc.createElement('style');
+                        // AJUSTE: Removido 'text-rendering: optimizeLegibility' para evitar problemas de aglutinação
                         style.innerHTML = `
                             * { 
                                 -webkit-font-smoothing: antialiased !important; 
                                 -moz-osx-font-smoothing: grayscale !important; 
-                                text-rendering: optimizeLegibility !important;
                             }
                         `;
                         clonedDoc.head.appendChild(style);
