@@ -771,21 +771,16 @@
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center mb-4 pb-4 border-b border-slate-200 border-dashed">
+                <!-- LINHA EQUIPE - Centralizada agora que está sozinha -->
+                <div class="flex justify-center items-center mb-4 pb-4 border-b border-slate-200 border-dashed">
                      <div class="flex items-center gap-2">
                         <!-- Icone de Equipe REMOVIDO -->
-                        <!-- AJUSTE: Aumentado de text-[10px] para text-xs e valor para text-sm -->
                         <span class="text-xs font-bold text-slate-600">Equipe: <span class="text-slate-800 text-sm font-extrabold">${crew}</span></span>
-                    </div>
-                     <div class="flex items-center gap-2">
-                        <!-- Icone de Estimativas REMOVIDO -->
-                        <!-- AJUSTE: Aumentado de text-[10px] para text-sm e valor para text-base -->
-                        <span class="text-sm font-bold text-emerald-700">${estimateLabel} <span class="text-emerald-900 text-base font-extrabold">${est}</span></span>
                     </div>
                 </div>
                 
-                <!-- AJUSTE: Removido bg-white e sombras, agora é apenas texto centralizado -->
-                <div class="grid grid-cols-4 gap-2 text-[10px] text-slate-500 font-medium mb-1 mt-2">
+                <!-- GRID DE TEMPOS -->
+                <div class="grid grid-cols-4 gap-2 text-[10px] text-slate-500 font-medium mb-4 mt-2">
                     <div class="flex flex-col items-center">
                         <span class="text-green-600 font-bold mb-0.5 uppercase tracking-wide">Início</span>
                         <span class="text-slate-700 font-bold text-xs">${start}</span>
@@ -802,6 +797,11 @@
                         <span class="text-emerald-700 font-bold mb-0.5 uppercase tracking-wide">Total</span>
                         <span class="text-slate-900 font-extrabold text-xs">${totalHours} h</span>
                     </div>
+                </div>
+
+                <!-- ESTIMATIVAS MOVIDAS PARA BAIXO (ACIMA DO RODAPÉ DA MARCA) -->
+                <div class="flex justify-center items-center pt-2 border-t border-slate-100">
+                    <span class="text-sm font-bold text-emerald-700">${estimateLabel} <span class="text-emerald-900 text-base font-extrabold">${est}</span></span>
                 </div>
             `;
 
