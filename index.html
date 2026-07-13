@@ -510,8 +510,9 @@
             lucide.createIcons();
         }
 
-        // URL do Apps Script que consulta a aba "Usuarios" na planilha
-        const LOGIN_GAS_URL = 'https://script.google.com/macros/s/AKfycbxMvA1xEKhZ-BKGUQPcmYcpsTEki2sUwfHT1qBSmzyQRx4ywCFvOAK5tlkrOppcO8QC7A/exec';
+        // URL única do Apps Script (roteador doGet/doPost unificado) — todas as funcionalidades
+        // (login, histórico, pendentes, blocos/plantas) usam esta mesma URL com ?action=...
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyJpfmhZ-tQj_phEuvUKx8nSvBzl3dA26xsd7nUEJ7a3M0J1dnL4Ti0nykrN7i0a7LduQ/exec';
 
         async function handleLogin(e) {
             e.preventDefault();
@@ -525,7 +526,7 @@
             if (submitBtn) { submitBtn.disabled = true; submitBtn.querySelector('span').innerText = 'Verificando...'; }
 
             try {
-                const url = `${LOGIN_GAS_URL}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
+                const url = `${GAS_URL}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
                 const response = await fetch(url, { method: 'GET', redirect: 'follow' });
                 const data = JSON.parse(await response.text());
 
@@ -749,7 +750,7 @@
 
         async function c_syncForecasts(silent = false) {
             try {
-                const response = await fetch("https://script.google.com/macros/s/AKfycbx-xn0diWKEl8ZluHc4C_fDB-0P5yKs_75POdcd6We6MlR6yjrKRNkmVct0kV7JksxDdA/exec", { method: 'GET', redirect: 'follow' });
+                const response = await fetch(`${GAS_URL}?action=pendentes`, { method: 'GET', redirect: 'follow' });
                 const textResponse = await response.text(); let data = JSON.parse(textResponse);
                 if (data.error) { if (!silent) showAlert('Erro', [data.error], 'error'); return; }
                 document.getElementById('c_forecastBlocksContainer').innerHTML = '';
@@ -805,7 +806,7 @@
             if (modal) { modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10); }
             const forceCloseTimeout = setTimeout(() => { if (modal && !modal.classList.contains('hidden')) { modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300); } }, 8000);
             try {
-                const response = await fetch("https://script.google.com/macros/s/AKfycbypGiOpHEYQ9Hc4zzXi9age7jb54lrLaGZXLEGpeoiJZudqMsHjE86xeULpH_hVefTaSg/exec", { method: 'GET', redirect: 'follow' }); 
+                const response = await fetch(`${GAS_URL}?action=blocosPlantas`, { method: 'GET', redirect: 'follow' }); 
                 const data = JSON.parse(await response.text());
                 if (!data.error) {
                     localStorage.setItem('spg_plants_data', JSON.stringify(data));
@@ -815,7 +816,7 @@
                     const finalCultures = Array.from(tempCultures).sort();
                     if (finalCultures.length > 0) { localStorage.setItem('spg_varieties', JSON.stringify(finalVarieties)); localStorage.setItem('spg_cultures', JSON.stringify(finalCultures)); }
                 }
-                const responseHist = await fetch("https://script.google.com/macros/s/AKfycbxMvA1xEKhZ-BKGUQPcmYcpsTEki2sUwfHT1qBSmzyQRx4ywCFvOAK5tlkrOppcO8QC7A/exec", { method: 'GET', redirect: 'follow' }); 
+                const responseHist = await fetch(`${GAS_URL}?action=historico`, { method: 'GET', redirect: 'follow' }); 
                 const dataHist = JSON.parse(await responseHist.text());
                 if (!dataHist.error) { localStorage.setItem('spg_harvest_history', JSON.stringify(dataHist)); c_refreshAllAccumulated(); }
                 await c_syncForecasts(true);
@@ -846,8 +847,8 @@
         async function p_syncAndEnrichDates() {
             try {
                 const [resPlants, resHist] = await Promise.all([
-                    fetch("https://script.google.com/macros/s/AKfycbypGiOpHEYQ9Hc4zzXi9age7jb54lrLaGZXLEGpeoiJZudqMsHjE86xeULpH_hVefTaSg/exec", { method: 'GET', redirect: 'follow' }),
-                    fetch("https://script.google.com/macros/s/AKfycbxMvA1xEKhZ-BKGUQPcmYcpsTEki2sUwfHT1qBSmzyQRx4ywCFvOAK5tlkrOppcO8QC7A/exec", { method: 'GET', redirect: 'follow' })
+                    fetch(`${GAS_URL}?action=blocosPlantas`, { method: 'GET', redirect: 'follow' }),
+                    fetch(`${GAS_URL}?action=historico`, { method: 'GET', redirect: 'follow' })
                 ]);
                 const dataPlants = JSON.parse(await resPlants.text());
                 const dataHist = JSON.parse(await resHist.text());
@@ -865,8 +866,8 @@
             const forceCloseTimeout = setTimeout(() => { if (modal && !modal.classList.contains('hidden')) { modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300); } }, 8000);
             try {
                 const [resPlants, resHist] = await Promise.all([
-                    fetch("https://script.google.com/macros/s/AKfycbypGiOpHEYQ9Hc4zzXi9age7jb54lrLaGZXLEGpeoiJZudqMsHjE86xeULpH_hVefTaSg/exec", { method: 'GET', redirect: 'follow' }),
-                    fetch("https://script.google.com/macros/s/AKfycbxMvA1xEKhZ-BKGUQPcmYcpsTEki2sUwfHT1qBSmzyQRx4ywCFvOAK5tlkrOppcO8QC7A/exec", { method: 'GET', redirect: 'follow' })
+                    fetch(`${GAS_URL}?action=blocosPlantas`, { method: 'GET', redirect: 'follow' }),
+                    fetch(`${GAS_URL}?action=historico`, { method: 'GET', redirect: 'follow' })
                 ]);
                 const dataPlants = JSON.parse(await resPlants.text());
                 const dataHist = JSON.parse(await resHist.text());
